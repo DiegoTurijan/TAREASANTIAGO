@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funciones Polares</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .header {
+            width: 100%;
+            background-color: #2563eb;
+            color: white;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .header h1 {
+            font-size: 1.125rem;
+            font-weight: bold;
+        }
+        .container {
+            width: 90%;
+            max-width: 400px;
+            background-color: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 2rem;
+        }
+        canvas {
+            border: 2px solid #e5e7eb;
+            background-color: #fff;
+            border-radius: 1rem;
+            touch-action: none;
+        }
+        .controls-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            width: 100%;
+            margin-top: 1.5rem;
+        }
+        .button {
+            border-radius: 0.75rem;
+            padding: 1rem 0;
+            text-align: center;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .button.polar-1 {
+            background-color: #fbbf24;
+        }
+        .button.polar-2 {
+            background-color: #f87171;
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <h1>By Javier Díaz Sánchez</h1>
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
+        <path fill-rule="evenodd" d="M12 7a2 2 0 1 0 0-4a2 2 0 0 0 0 4zm0 6a2 2 0 1 0 0-4a2 2 0 0 0 0 4zm0 6a2 2 0 1 0 0-4a2 2 0 0 0 0 4z" clip-rule="evenodd" />
+    </svg>
+</header>
+
+<div class="container">
+    <h1 class="text-2xl font-bold mb-4">Funciones y procedimientos</h1>
+    <canvas id="polarCanvas" width="300" height="300" class="mb-4"></canvas>
+    <div class="controls-grid">
+        <button class="button polar-1" onclick="drawPolar1()">Polar 1</button>
+        <button class="button polar-2" onclick="drawPolar2()">Polar 2</button>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('polarCanvas');
+    const ctx = canvas.getContext('2d');
+    const size = canvas.width;
+    const center = size / 2;
+    const scale = 50;
+
+    function clearCanvas() {
+        ctx.clearRect(0, 0, size, size);
+        ctx.strokeStyle = '#e5e7eb';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(0, center);
+        ctx.lineTo(size, center);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(center, 0);
+        ctx.lineTo(center, size);
+        ctx.stroke();
+    }
+
+    function drawGraph(formula) {
+        clearCanvas();
+        ctx.beginPath();
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 2;
+
+        let start = 0;
+        let end = 2 * Math.PI;
+        let step = 0.01;
+
+        let r = formula(0);
+        let x = center + r * Math.cos(0) * scale;
+        let y = center - r * Math.sin(0) * scale;
+        ctx.moveTo(x, y);
+
+        for (let angle = start; angle <= end; angle += step) {
+            r = formula(angle);
+            x = center + r * Math.cos(angle) * scale;
+            y = center - r * Math.sin(angle) * scale;
+            ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+    }
+
+    function drawPolar1() {
+        // R = sin(2 * theta)
+        drawGraph((theta) => Math.sin(2 * theta));
+    }
+
+    function drawPolar2() {
+        // R = 1 + cos(theta)
+        drawGraph((theta) => 1 + Math.cos(theta));
+    }
+
+    window.onload = () => {
+        drawPolar1();
+    }
+</script>
+
+</body>
+</html>
